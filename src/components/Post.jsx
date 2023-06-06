@@ -8,8 +8,11 @@ import { ptBR } from "date-fns/locale";
 
 import { Comment } from "./Comment";
 import { Avatar } from "./Avatar";
+import { useState } from "react";
 
 export const Post = ({ author, publishedAt, content }) => {
+	const [comments, setComment] = useState([1, 2]);
+
 	const formatedDate = format(publishedAt, "dd 'de' LLLL 'às' HH:mm'h'", {
 		locale: ptBR,
 	});
@@ -18,6 +21,11 @@ export const Post = ({ author, publishedAt, content }) => {
 		locale: ptBR,
 		addSuffix: true,
 	});
+
+	const handleCreateNewComment = (e) => {
+		e.preventDefault();
+		setComment([...comments, comments.length + 1]);
+	};
 
 	return (
 		<article className={styles.post}>
@@ -49,7 +57,7 @@ export const Post = ({ author, publishedAt, content }) => {
 				})}
 			</div>
 
-			<form className={styles.commentForm}>
+			<form onSubmit={handleCreateNewComment} className={styles.commentForm}>
 				<strong>Deixe seu feedback</strong>
 
 				<textarea placeholder='Deixe um comentário' />
@@ -60,9 +68,9 @@ export const Post = ({ author, publishedAt, content }) => {
 			</form>
 
 			<div className={styles.commentList}>
-				<Comment />
-				<Comment />
-				<Comment />
+				{comments.map((comment) => {
+					return <Comment />;
+				})}
 			</div>
 		</article>
 	);
